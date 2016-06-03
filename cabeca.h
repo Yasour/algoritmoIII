@@ -8,7 +8,7 @@ typedef struct trie nodo;  /* Cria struct nodo */
 typedef struct base raiz;   /* Raíz trie */
 
 struct trie {
-  int letra [26];            /* Vetor int para caracteres */
+  int letra [27];            /* Vetor int para caracteres */
   char *palavra;             /* Qual palavra formou? */
 };
 

@@ -85,9 +85,9 @@ raiz* criaNodo(raiz *root){           /* somente cria */
   return root;                        /* retornará o endereço raiz */
 }
 
-int procuraLetra (raiz *root, int* palavra){
+int calculaLetra (int* palavra){  /* Calcula endereço correspondente no vetor */
   int i;
-  
+  i = (palavra [0] - 97);           /* Correspondente ao vetor de 0 ~ 25 */
   return i;
 }
 

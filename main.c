@@ -12,18 +12,18 @@ int main ( ) {
 
   entrada = abreDicio();
 
-  lista = copiaFile(entrada,palavra);
+  palavra = copiaFile(entrada,palavra);
 
   i = 0;
-  lista = maiuscMinusc (lista);
+  /*palavra = maiuscMinusc (palavra);*/
   while (i < 15) {
-    printf("%c",lista[i]);
+    printf("%c",palavra[i]);
     i++;
   }
-
+/*
   root = criaTrie ();
   root = criaNodo (root);
-
+*/
 
   fclose (entrada);
   free (palavra);
