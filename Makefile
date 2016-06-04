@@ -1,9 +1,9 @@
 all:	programa
-programa:		funcoes.o	main.o
-							gcc	-o	programa	funcoes.o	main.o
-funcoes.o:	funcoes.c
-							gcc	-o	funcoes.o	-c	funcoes.c	-W	-Wall	-ansi	-pedantic
-main.o:			main.c	cabeca.h
+programa:		dicionario.o	main.o
+							gcc	-o	programa	dicionario.o	main.o
+dicionario.o:	dicionario.c
+							gcc	-o	dicionario.o	-c	dicionario.c	-W	-Wall	-ansi	-pedantic
+main.o:			main.c	dicionario.h
 							gcc	-o	main.o	-c	main.c	-W	-Wall	-ansi	-pedantic
 clean:
 							rm	-rf	*.o

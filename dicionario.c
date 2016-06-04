@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "cabeca.h"
+#include "dicionario.h"
 
 void *mallocc (size_t nbytes){          /* Função que avisa caso malloc devolva NULL */
   void *ptr;
