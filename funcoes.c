@@ -59,15 +59,14 @@ int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
 
   int i = 0;
 
-  do{
+  while (i < 15){
     palavra [i] = fgetc (entrada);  /* copie do .txt 1 char */
 
-    if (palavra [i] == EOF) {         /* fim FILE */
+    if (palavra [i] == EOF || palavra [i] == 10) {         /* fim FILE ou fim palavra */
       return palavra;
     }
-
     i++;
-  }while (palavra [i] != 10);
+  }
 
   return palavra;                     /* Vetor com o trecho */
 }
