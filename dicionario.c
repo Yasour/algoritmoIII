@@ -34,12 +34,6 @@ int* maiuscMinusc(int* entrada){       /* Troca Maiúsculas -> Minúsculas */
   return entrada;
 }
 
-int* monoMaiuscMinusc(int* entrada,int i){       /* Troca para 1 char */
-  if (entrada [i] >=65 && entrada [i] <= 90 )
-    entrada [i] += 32 ;              /* Soma 32 ao valor original */
-  return entrada;
-}
-
 int conferePalavra(int* palavra){
   int i = 0;
   palavra = maiuscMinusc (palavra);

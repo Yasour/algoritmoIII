@@ -20,8 +20,6 @@ FILE* abreDicio ();
 
 int* maiuscMinusc(int* entrada);  /* Troca Maiúsculas -> Minúsculas */
 
-int* monoMaiuscMinusc(int* entrada,int i);       /* Troca para 1 char */
-
 int conferePalavra(int* palavra);  /* retorna 0 se errado, 1 se certo */
 
 int *copiaFile(FILE *entrada, int* palavra);
