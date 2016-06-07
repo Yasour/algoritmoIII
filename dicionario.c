@@ -47,17 +47,30 @@ int conferePalavra(int* palavra){
     }
     i++;
   }while (palavra[i] != '\0');    /* até final vetor */
+
+  return 0; /* SE CHEGOU AQUI, ALGO DEU ERRADO */
 }
 
 int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
 
   int i = 0;
+  int j;
 
   while (i < 15){
     palavra [i] = fgetc (entrada);  /* copie do .txt 1 char */
 
+
     if (palavra [i] == EOF || palavra [i] == 10) {         /* fim FILE ou fim palavra */
-      return palavra;
+      /* ADICIONAR AQUI A FUNÇAO CONFERE palavra
+      CASO NECESSÁRIO, RETOMAR O WHILE NO ZERO CASO CONTRARIO
+      SETAR i = 15 */
+      j = conferePalavra(palavra);
+      if (j == 0){
+        i = 0;
+      }else
+      if (j == 1){
+        return palavra;         /* Aqui fará com que saia do laço WHILE */
+      }
     }
     i++;
   }
@@ -72,8 +85,15 @@ raiz *criaTrie(){                     /* Função cria Raíz Trie */
 }
 
 raiz* criaNodo(raiz *root){           /* somente cria */
+  int i = 0 ;
   nodo* no;
   no = mallocc (sizeof(nodo));
+
+  while (i < 27){
+    no -> letra [i] = 0 ;             /* valor inicial do vetor 0 */
+    i ++ ;
+  }
+
   root -> primeiro = no;              /* primeiro nó adicionado na raíz */
   return root;                        /* retornará o endereço raiz */
 }
@@ -84,10 +104,30 @@ int calculaLetra (int* palavra){  /* Calcula endereço correspondente no vetor *
   return i;
 }
 
+int procuraCelula (nodo* no, int i){
+  if (no -> letra [i] == 0){
+    return 0;     /* VAZIO */
+  }
+  else {
+    return 1;      /* CHEIO */
+  }
+}
+
 raiz* inserePalavra(raiz* root, int* palavra){    /* Recebe vetor com lista de palavras*/
+  int i ;
+  nodo *primeiroNodo;   /* vou inserir o primeiro nodo indicado pela RAIZ */
+  nodo *novoNodo;
+
   if (root -> primeiro == NULL){      /* Caso Seja o primeiro nodo a ser incluido */
     root = criaNodo (root);
   }
-  /* FUNÇÃO PROCURA ROOT UMA LETRA */
+
+  primeiroNodo = root -> primeiro;
+
+
+  i = procuraCelula ( primeiroNodo, calculaLetra(palavra)); /* procuraCelula irá indicar se está ocupado ou não o vetor em dada celula */
+  if ( i == 0 ){      /* Não possui palavras que iniciam nesta letra */
+    novoNodo = mallocc (sizeof (nodo));
+  }
   return root;
 }

@@ -20,7 +20,7 @@ int main ( ) {
     printf("%c",palavra[i]);
     i++;
   }
-
+  printf("\n");
   root = criaTrie ();
   root = criaNodo (root);
 

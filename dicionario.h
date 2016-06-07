@@ -7,12 +7,12 @@ typedef struct trie nodo;  /* Cria struct nodo */
 
 typedef struct base raiz;   /* Raíz trie */
 
-struct trie {
+struct trie {         /* NODO */
   int letra [27];            /* Vetor int para caracteres */
   char *palavra;             /* Qual palavra formou? */
 };
 
-struct base {
+struct base {        /* RAÍZ */
   nodo *primeiro ;                    /* Pointer struct trie */
 };
 
