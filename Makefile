@@ -1,6 +1,6 @@
-all:	programa
-programa:		dicionario.o	main.o
-							gcc	-o	programa	dicionario.o	main.o
+all:	dicionario
+dicionario:		dicionario.o	main.o
+							gcc	-o	dicionario	dicionario.o	main.o
 dicionario.o:	dicionario.c
 							gcc	-o	dicionario.o	-c	dicionario.c	-W	-Wall	-ansi	-pedantic
 main.o:			main.c	dicionario.h

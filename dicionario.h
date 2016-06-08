@@ -28,12 +28,16 @@ int conferePalavra(int* palavra);  /* retorna 0 se errado, 1 se certo */
 
 int *copiaFile(FILE *entrada, int* palavra);
 
-raiz* criaTrie();            /* Cria Raíz da Trie */
-
-raiz* criaNodo(raiz *root);           /* somente cria */
-
 nodo* criaNo();
 
+raiz* criaTrie();            /* Cria Raíz da Trie */
+
 int inserePalavra(nodo* N, int* palavra);
+
+nodo *get(nodo *N, int *palavra);
+
+int procura(nodo *N, int *palavra);
+
+int encheTrie();
 
 #endif

@@ -25,7 +25,9 @@ FILE* abreDicio (){                     /* Abre FILE do Dicionario corretamente 
 
 int* maiuscMinusc(int* palavra){       /* Troca Maiúsculas -> Minúsculas */
   int i;
-  for (i = 0; palavra [i] != '\0'; i++){
+  for (i = 0; palavra [i] != 10; i++){
+
+
     if (palavra [i] >=65 && palavra [i] <= 90 ){
       palavra [i] += 32 ;
     }
@@ -34,33 +36,43 @@ int* maiuscMinusc(int* palavra){       /* Troca Maiúsculas -> Minúsculas */
 }
 
 int conferePalavra(int* palavra){
-  int i;
+  int i, flag;
   palavra = maiuscMinusc (palavra);
 
-  for (i = 0; palavra[i] != '\0'; i++){
-    if (palavra [i] >= 97 && palavra [i] <= 123){  /* Caso seja diferente de letras minusculas e pula linha */
-      return 1; /* CERTO */
+  flag = 1;
+  for (i = 0; palavra[i] != 10 ; i++){
+    if (palavra [i] < 97 || palavra [i] > 123){  /* Caso seja diferente de letras minusculas e pula linha */
+      flag = 0;
     }
   }
-  return 0; /* ERRADO */
+
+  if (flag == 1){
+    return 1; /* CERTO */
+  } else {
+    return 0; /* ERRADO */
+  }
+
 }
 
 int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
 
-  int i = 0;
-  int j;
+  int i, j;
+  i = 0;
 
-  while (i < 15){
+  while (i < 30){
     palavra [i] = fgetc (entrada);  /* copie do .txt 1 char */
 
+    if (palavra [i] == EOF){
+      palavra[0] = 10;
+      return palavra;
+    }
+    if (palavra [i] == 10) {         /* fim FILE ou fim palavra */
 
-    if (palavra [i] == EOF || palavra [i] == 10) {         /* fim FILE ou fim palavra */
-      /* ADICIONAR AQUI A FUNÇAO CONFERE palavra
-      CASO NECESSÁRIO, RETOMAR O WHILE NO ZERO CASO CONTRARIO
-      SETAR i = 15 */
       j = conferePalavra(palavra);
       if (j == 0){
         i = 0;
+        palavra [i] = fgetc (entrada);
+        j = conferePalavra(palavra);
       }else
       if (j == 1){
         return palavra;         /* Aqui fará com que saia do laço WHILE */
@@ -72,11 +84,6 @@ int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
   return palavra;                     /* Vetor com o trecho */
 }
 
-raiz *criaTrie(){                     /* Função cria Raíz Trie */
-  raiz *root;
-  root = mallocc (sizeof(raiz));
-  return root;
-}
 
 nodo* criaNo(){           /* somente cria */
   int i ;
@@ -94,6 +101,16 @@ nodo* criaNo(){           /* somente cria */
   return no;                        /* retornará o endereço raiz */
 }
 
+raiz *criaTrie(){                     /* Função cria Raíz Trie */
+  raiz *root;
+  nodo* no;
+  root = mallocc (sizeof(raiz));
+  no = criaNo();
+  root -> primeiro = no;
+
+  return root;
+}
+
 
 int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavras*/
   int i, pos;
@@ -102,7 +119,7 @@ int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavr
 
   auxNodo = N;
 
-  for (i = 0; palavra[i] != '\0'; i++){
+  for (i = 0; palavra[i] != 10; i++){
     pos = INDICE_CHAR (palavra [i]);    /* posição 00~26*/
 
     if (auxNodo -> letra [pos]){        /* se existir */
@@ -114,7 +131,6 @@ int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavr
       auxNodo -> filhos++;        /* agora tem 1 filho */
       auxNodo = novoNodo;
     }
-
   }
 
   if (!auxNodo -> letra [26]){    /* função que indica se há filhos ou não */
@@ -126,17 +142,17 @@ int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavr
 }
 
 /* Função auxiliar que acha o final de palavra */
-nodo *get(nodo *N, char *palavra){
+nodo *get(nodo *N, int *palavra){
   int i, pos;
   nodo *pointer;
 
   i = 0;
 
   pointer = N;
-  if (palavra [i] == '\0'){
+  if (palavra [i] == 10){
     return NULL;
   } else {
-    while ((palavra [i] != '\0') && (pointer)){
+    while ((palavra [i] != 10) && (pointer)){
       pos = INDICE_CHAR (palavra [i]);
       pointer = pointer -> letra [pos];
       i++;
@@ -145,7 +161,7 @@ nodo *get(nodo *N, char *palavra){
   return pointer;
 }
 
-int procura(nodo *N, char *palavra){
+int procura(nodo *N, int *palavra){
   nodo *aux;
 
   aux = get(N,palavra);
@@ -154,4 +170,34 @@ int procura(nodo *N, char *palavra){
     return 1; /* tem */
   }
   return 0; /* não tem */
+}
+
+int encheTrie(){
+    int i, fim,*palavra;   /* Vetor aonde será copiado um trecho do arq */
+    raiz *root;
+    nodo *no;
+    FILE *entrada;
+
+    root = criaTrie ();
+    no = root -> primeiro;
+
+    entrada = abreDicio();
+    palavra = mallocc (30 * sizeof (int));
+
+    palavra[0] = 1;
+
+    for(i = 0; palavra[0] != 10 ; i++){
+
+      palavra = copiaFile(entrada,palavra); /* extrai 1 palavra de FILE */
+      inserePalavra (no,palavra);   /* Insere a palavra na TRIE */
+
+      /* IMPRIME PALAVRA POR PALAVRA */
+    /*  for (fim = 0; palavra [fim] != 10; fim++){
+        printf("%c",palavra[fim]);
+      };
+      printf ("\n");*/
+    }
+    fclose (entrada);
+    free (palavra);
+    return i;
 }
