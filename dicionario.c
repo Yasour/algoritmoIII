@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "dicionario.h"
 
 void *mallocc (size_t nbytes){          /* Função que avisa caso malloc devolva NULL */
@@ -22,33 +23,26 @@ FILE* abreDicio (){                     /* Abre FILE do Dicionario corretamente 
   return entrada;
 }
 
-int* maiuscMinusc(int* entrada){       /* Troca Maiúsculas -> Minúsculas */
+int* maiuscMinusc(int* palavra){       /* Troca Maiúsculas -> Minúsculas */
   int i;
-  i = 0;
-  while (entrada[i] != '\0'){
-    if (entrada [i] >=65 && entrada [i] <= 90 ){
-      entrada [i] += 32 ;              /* Soma 32 ao valor original */
+  for (i = 0; palavra [i] != '\0'; i++){
+    if (palavra [i] >=65 && palavra [i] <= 90 ){
+      palavra [i] += 32 ;
     }
-    i++;
   }
-  return entrada;
+  return palavra;
 }
 
 int conferePalavra(int* palavra){
-  int i = 0;
+  int i;
   palavra = maiuscMinusc (palavra);
 
-  do{
-    if (palavra [i] <= 97 || palavra [i] >= 123 || palavra [i] != 10){  /* Caso seja diferente de letras minusculas e pula linha */
-      return 0; /* Errado */
-    }
-    else{
+  for (i = 0; palavra[i] != '\0'; i++){
+    if (palavra [i] >= 97 && palavra [i] <= 123){  /* Caso seja diferente de letras minusculas e pula linha */
       return 1; /* CERTO */
     }
-    i++;
-  }while (palavra[i] != '\0');    /* até final vetor */
-
-  return 0; /* SE CHEGOU AQUI, ALGO DEU ERRADO */
+  }
+  return 0; /* ERRADO */
 }
 
 int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
@@ -84,50 +78,80 @@ raiz *criaTrie(){                     /* Função cria Raíz Trie */
   return root;
 }
 
-raiz* criaNodo(raiz *root){           /* somente cria */
-  int i = 0 ;
+nodo* criaNo(){           /* somente cria */
+  int i ;
   nodo* no;
+
   no = mallocc (sizeof(nodo));
 
-  while (i < 27){
-    no -> letra [i] = 0 ;             /* valor inicial do vetor 0 */
-    i ++ ;
+  for (i = 0; i < 27; i++){
+    no -> letra [i] = NULL ;             /* valor inicial do vetor 0 */
   }
 
-  root -> primeiro = no;              /* primeiro nó adicionado na raíz */
-  return root;                        /* retornará o endereço raiz */
+  no -> filhos = 0;
+  no -> pai = NULL;
+
+  return no;                        /* retornará o endereço raiz */
 }
 
-int calculaLetra (int* palavra){  /* Calcula endereço correspondente no vetor */
-  int i;
-  i = (palavra [0] - 97);           /* Correspondente ao vetor de 0 ~ 25 */
-  return i;
-}
 
-int procuraCelula (nodo* no, int i){
-  if (no -> letra [i] == 0){
-    return 0;     /* VAZIO */
-  }
-  else {
-    return 1;      /* CHEIO */
-  }
-}
-
-raiz* inserePalavra(raiz* root, int* palavra){    /* Recebe vetor com lista de palavras*/
-  int i ;
-  nodo *primeiroNodo;   /* vou inserir o primeiro nodo indicado pela RAIZ */
+int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavras*/
+  int i, pos;
+  nodo *auxNodo;   /* vou inserir o primeiro nodo indicado pela RAIZ */
   nodo *novoNodo;
 
-  if (root -> primeiro == NULL){      /* Caso Seja o primeiro nodo a ser incluido */
-    root = criaNodo (root);
+  auxNodo = N;
+
+  for (i = 0; palavra[i] != '\0'; i++){
+    pos = INDICE_CHAR (palavra [i]);    /* posição 00~26*/
+
+    if (auxNodo -> letra [pos]){        /* se existir */
+      auxNodo = auxNodo -> letra [pos];
+    } else {
+      novoNodo = criaNo();
+      auxNodo -> letra [pos] = novoNodo;
+      novoNodo -> pai = auxNodo;
+      auxNodo -> filhos++;        /* agora tem 1 filho */
+      auxNodo = novoNodo;
+    }
+
   }
 
-  primeiroNodo = root -> primeiro;
-
-
-  i = procuraCelula ( primeiroNodo, calculaLetra(palavra)); /* procuraCelula irá indicar se está ocupado ou não o vetor em dada celula */
-  if ( i == 0 ){      /* Não possui palavras que iniciam nesta letra */
-    novoNodo = mallocc (sizeof (nodo));
+  if (!auxNodo -> letra [26]){    /* função que indica se há filhos ou não */
+    auxNodo -> letra [26] = (nodo*) 1;
+    auxNodo -> filhos++;
   }
-  return root;
+
+  return 1;
+}
+
+/* Função auxiliar que acha o final de palavra */
+nodo *get(nodo *N, char *palavra){
+  int i, pos;
+  nodo *pointer;
+
+  i = 0;
+
+  pointer = N;
+  if (palavra [i] == '\0'){
+    return NULL;
+  } else {
+    while ((palavra [i] != '\0') && (pointer)){
+      pos = INDICE_CHAR (palavra [i]);
+      pointer = pointer -> letra [pos];
+      i++;
+    }
+  }
+  return pointer;
+}
+
+int procura(nodo *N, char *palavra){
+  nodo *aux;
+
+  aux = get(N,palavra);
+
+  if ((aux) && (aux -> letra [26])){
+    return 1; /* tem */
+  }
+  return 0; /* não tem */
 }

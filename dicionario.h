@@ -1,6 +1,8 @@
 #ifndef programa
 #define programa
 
+#define INDICE_CHAR(c) ((int)c - (int)'a')
+
 void *mallocc (size_t nbytes);/* Função que avisa caso malloc devolva NULL */
 
 typedef struct trie nodo;  /* Cria struct nodo */
@@ -8,8 +10,10 @@ typedef struct trie nodo;  /* Cria struct nodo */
 typedef struct base raiz;   /* Raíz trie */
 
 struct trie {         /* NODO */
-  int letra [27];            /* Vetor int para caracteres */
+  nodo *letra [27];            /* Vetor int para caracteres */
   char *palavra;             /* Qual palavra formou? */
+  int filhos;
+  nodo *pai;
 };
 
 struct base {        /* RAÍZ */
@@ -18,7 +22,7 @@ struct base {        /* RAÍZ */
 
 FILE* abreDicio ();
 
-int* maiuscMinusc(int* entrada);  /* Troca Maiúsculas -> Minúsculas */
+int* maiuscMinusc(int* palavra);  /* Troca Maiúsculas -> Minúsculas */
 
 int conferePalavra(int* palavra);  /* retorna 0 se errado, 1 se certo */
 
@@ -28,6 +32,8 @@ raiz* criaTrie();            /* Cria Raíz da Trie */
 
 raiz* criaNodo(raiz *root);           /* somente cria */
 
-raiz* inserePalavra(raiz* root, int* palavra);
+nodo* criaNo();
+
+int inserePalavra(nodo* N, int* palavra);
 
 #endif
