@@ -6,39 +6,28 @@
 
 int main (int argc, char *argv[] ) {
 /*
+  char *s1 = "ivo0";
+  char *s2 = "iva";
+
+  printf("distance between `%s' and `%s': %d\n", s1, s2,
+          levenshtein(s1, strlen(s1), s2, strlen(s2)));*/
+  char *pal;
+
   int i;
-  FILE *entrada;
-  raiz *root;
-  int *palavra;
   nodo *no;
-  printf("%d\n",argc);
-
-  palavra = mallocc (15 * sizeof (int));
-
-  entrada = abreDicio();
-
-  palavra = copiaFile(entrada,palavra);
-
-  for (i = 0; palavra [i] != 10; i++){
-    printf("%c",palavra[i]);
-  }
-
-  printf("\napós impressão\n");
-
-  root = criaTrie ();
-
-  no = root -> primeiro;
-
-  inserePalavra (no,palavra);
-  printf("resultado procura: %d\n",(int)procura(no,palavra));
+  no = encheTrie ();
+  pal = malloc (30*(sizeof(char)));
+  pal[0] = 'a';
+  pal[1] = 'l';
+  pal[2] = 'a';
+  pal[3] = 'i';
+  pal[4] = 'r';
+  pal[5] = 10;
+  i = procura (no,  pal);
 
 
-  fclose (entrada);
-  free (palavra);
-*/
-  printf("palavras adicionadas:%d\n", encheTrie());
 
-  
 
   return 0;
+
 }

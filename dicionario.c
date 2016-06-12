@@ -23,10 +23,9 @@ FILE* abreDicio (){                     /* Abre FILE do Dicionario corretamente 
   return entrada;
 }
 
-int* maiuscMinusc(int* palavra){       /* Troca Maiúsculas -> Minúsculas */
+char* maiuscMinusc(char* palavra){       /* Troca Maiúsculas -> Minúsculas */
   int i;
   for (i = 0; palavra [i] != 10; i++){
-
 
     if (palavra [i] >=65 && palavra [i] <= 90 ){
       palavra [i] += 32 ;
@@ -35,7 +34,7 @@ int* maiuscMinusc(int* palavra){       /* Troca Maiúsculas -> Minúsculas */
   return palavra;
 }
 
-int conferePalavra(int* palavra){
+int conferePalavra(char* palavra){
   int i, flag;
   palavra = maiuscMinusc (palavra);
 
@@ -54,7 +53,7 @@ int conferePalavra(int* palavra){
 
 }
 
-int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
+char *copiaFile(FILE *entrada, char* palavra){         /* .txt -> vetor */
 
   int i, j;
   i = 0;
@@ -80,10 +79,8 @@ int *copiaFile(FILE *entrada, int* palavra){         /* .txt -> vetor */
     }
     i++;
   }
-
   return palavra;                     /* Vetor com o trecho */
 }
-
 
 nodo* criaNo(){           /* somente cria */
   int i ;
@@ -97,6 +94,7 @@ nodo* criaNo(){           /* somente cria */
 
   no -> filhos = 0;
   no -> pai = NULL;
+  no -> palavra = NULL;
 
   return no;                        /* retornará o endereço raiz */
 }
@@ -112,15 +110,15 @@ raiz *criaTrie(){                     /* Função cria Raíz Trie */
 }
 
 
-int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavras*/
+int inserePalavra(nodo* N, char* palav){    /* Recebe vetor com palavra conferida */
   int i, pos;
-  nodo *auxNodo;   /* vou inserir o primeiro nodo indicado pela RAIZ */
+  nodo *auxNodo;
   nodo *novoNodo;
 
-  auxNodo = N;
+  auxNodo = N;                  /* vou inserir o primeiro nodo indicado pela RAIZ */
 
-  for (i = 0; palavra[i] != 10; i++){
-    pos = INDICE_CHAR (palavra [i]);    /* posição 00~26*/
+  for (i = 0; palav[i] != 10; i++){
+    pos = INDICE_CHAR (palav [i]);    /* posição 00~26*/
 
     if (auxNodo -> letra [pos]){        /* se existir */
       auxNodo = auxNodo -> letra [pos];
@@ -133,6 +131,13 @@ int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavr
     }
   }
 
+  auxNodo -> palavra = mallocc (30 * (sizeof(char)));
+
+  for (i = 0; palav[i] != 10; i++){     /* copia o char da palavra completa no último nodo */
+    auxNodo -> palavra[i] = palav[i];
+  }
+    auxNodo -> palavra[i] = 10;
+
   if (!auxNodo -> letra [26]){    /* função que indica se há filhos ou não */
     auxNodo -> letra [26] = (nodo*) 1;
     auxNodo -> filhos++;
@@ -142,9 +147,10 @@ int inserePalavra(nodo* N, int* palavra){    /* Recebe vetor com lista de palavr
 }
 
 /* Função auxiliar que acha o final de palavra */
-nodo *get(nodo *N, int *palavra){
+nodo *get(nodo *N, char *palavra){
   int i, pos;
   nodo *pointer;
+
 
   i = 0;
 
@@ -161,19 +167,21 @@ nodo *get(nodo *N, int *palavra){
   return pointer;
 }
 
-int procura(nodo *N, int *palavra){
+int procura(nodo *N, char *palavra){
   nodo *aux;
 
   aux = get(N,palavra);
 
   if ((aux) && (aux -> letra [26])){
+    printf("%s\n",aux -> palavra);
     return 1; /* tem */
   }
   return 0; /* não tem */
 }
 
-int encheTrie(){
-    int i, fim,*palavra;   /* Vetor aonde será copiado um trecho do arq */
+nodo* encheTrie(){
+    int i,fim;   /* Vetor aonde será copiado um trecho do arq */
+    char *palavra;
     raiz *root;
     nodo *no;
     FILE *entrada;
@@ -186,18 +194,51 @@ int encheTrie(){
 
     palavra[0] = 1;
 
-    for(i = 0; palavra[0] != 10 ; i++){
+    for(i = 0; palavra[0] != 10 ; i++){   /* Não para até chegar no fim do FILE */
 
       palavra = copiaFile(entrada,palavra); /* extrai 1 palavra de FILE */
       inserePalavra (no,palavra);   /* Insere a palavra na TRIE */
 
       /* IMPRIME PALAVRA POR PALAVRA */
-    /*  for (fim = 0; palavra [fim] != 10; fim++){
+      for (fim = 0; palavra [fim] != 10; fim++){
         printf("%c",palavra[fim]);
       };
-      printf ("\n");*/
+      printf ("\n");
     }
     fclose (entrada);
     free (palavra);
-    return i;
+    return no;
+}
+
+
+int levenshtein(char *s, int ls, char *t, int lt)
+{
+        int a, b, c;
+
+        /* if either string is empty, difference is inserting all chars
+         * from the other
+         */
+        if (!ls) return lt;
+        if (!lt) return ls;
+
+        /* if last letters are the same, the difference is whatever is
+         * required to edit the rest of the strings
+         */
+        if (s[ls] == t[ls])
+                return levenshtein(s, ls - 1, t, lt - 1);
+
+        /* else try:
+         *      changing last letter of s to that of t; or
+         *      remove last letter of s; or
+         *      remove last letter of t,
+         * any of which is 1 edit plus editing the rest of the strings
+         */
+        a = levenshtein(s, ls - 1, t, lt - 1);
+        b = levenshtein(s, ls,     t, lt - 1);
+        c = levenshtein(s, ls - 1, t, lt    );
+
+        if (a > b) a = b;
+        if (a > c) a = c;
+
+        return a + 1;
 }

@@ -11,9 +11,9 @@ typedef struct base raiz;   /* Raíz trie */
 
 struct trie {         /* NODO */
   nodo *letra [27];            /* Vetor int para caracteres */
-  char *palavra;             /* Qual palavra formou? */
   int filhos;
   nodo *pai;
+  char *palavra;
 };
 
 struct base {        /* RAÍZ */
@@ -22,22 +22,24 @@ struct base {        /* RAÍZ */
 
 FILE* abreDicio ();
 
-int* maiuscMinusc(int* palavra);  /* Troca Maiúsculas -> Minúsculas */
+char* maiuscMinusc(char* palavra);  /* Troca Maiúsculas -> Minúsculas */
 
-int conferePalavra(int* palavra);  /* retorna 0 se errado, 1 se certo */
+int conferePalavra(char* palavra);  /* retorna 0 se errado, 1 se certo */
 
-int *copiaFile(FILE *entrada, int* palavra);
+char *copiaFile(FILE *entrada, char* palavra);
 
 nodo* criaNo();
 
 raiz* criaTrie();            /* Cria Raíz da Trie */
 
-int inserePalavra(nodo* N, int* palavra);
+int inserePalavra(nodo* N, char* palavra);
 
-nodo *get(nodo *N, int *palavra);
+nodo *get(nodo *N, char *palavra);
 
-int procura(nodo *N, int *palavra);
+int procura(nodo *N, char *palavra);
 
-int encheTrie();
+nodo *encheTrie();
+
+int levenshtein(char *s, int ls, char *t, int lt);
 
 #endif
