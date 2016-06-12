@@ -138,35 +138,16 @@ int inserePalavra(nodo* N, char* palav){    /* Recebe vetor com palavra conferid
   }
     auxNodo -> palavra[i] = 10;
 
-  if (!auxNodo -> letra [26]){    /* função que indica se há filhos ou não */
-    auxNodo -> letra [26] = (nodo*) 1;
+  if (!auxNodo -> letra [26]){
+    auxNodo -> letra [26] = (nodo*) 1;    /* indica último nodo de palavra */
     auxNodo -> filhos++;
   }
 
   return 1;
 }
 
-/* Função auxiliar que acha o final de palavra */
-nodo *get(nodo *N, char *palavra){
-  int i, pos;
-  nodo *pointer;
 
-
-  i = 0;
-
-  pointer = N;
-  if (palavra [i] == 10){
-    return NULL;
-  } else {
-    while ((palavra [i] != 10) && (pointer)){
-      pos = INDICE_CHAR (palavra [i]);
-      pointer = pointer -> letra [pos];
-      i++;
-    }
-  }
-  return pointer;
-}
-
+/*
 int procura(nodo *N, char *palavra){
   nodo *aux;
 
@@ -174,10 +155,13 @@ int procura(nodo *N, char *palavra){
 
   if ((aux) && (aux -> letra [26])){
     printf("%s\n",aux -> palavra);
-    return 1; /* tem */
+    return 1;
   }
-  return 0; /* não tem */
+  return 0;
 }
+*/
+
+
 
 nodo* encheTrie(){
     int i,fim;   /* Vetor aonde será copiado um trecho do arq */
@@ -241,4 +225,65 @@ int levenshtein(char *s, int ls, char *t, int lt)
         if (a > c) a = c;
 
         return a + 1;
+}
+
+/* Função auxiliar que acha o final de palavra */
+nodo *get(nodo *N, char *palavra){
+  int i, pos;
+  nodo *pointer;
+
+  i = 0;
+
+  pointer = N;
+  if (palavra [i] == 10){
+    return NULL;
+  } else {
+    while ((palavra [i] != 10) && (pointer)){
+      pos = INDICE_CHAR (palavra [i]);
+      pointer = pointer -> letra [pos];
+      i++;
+    }
+  }
+  return pointer;
+}
+
+
+nodo *getReverse(nodo *N, char *palavra){
+  int i, pos;
+  nodo *pointer;
+
+  i = 0;
+
+  pointer = N;
+  if (palavra [i] == 10){
+    return NULL;
+  } else {
+    while ((palavra [i] != 10) && (pointer)){
+      pos = INDICE_CHAR (palavra [i]);
+      pointer = pointer -> letra [pos];
+      i++;
+    }
+  }
+  return pointer;
+}
+
+int procura(nodo *N, char *palavra, int dist){
+  nodo *aux;
+  char *lista;
+
+
+
+  aux = get(N,palavra);
+  if ((aux) && (aux -> letra [26])){
+    printf("%s\n",aux -> palavra);
+  }
+
+  levenshtein(palavra, strlen(palavra), aux -> palavra, strlen(aux -> palavra));
+  /* FAZER UMA FUNÇÃO GET REVERSE, POIS O aux VEM COM O ENDEREÇO DO ÚLTIMO NODO, A PARTIR DAÍ IR VOLTANDO PARA OS PAIS */
+
+
+  if ((aux) && (aux -> filhos != 0))
+    
+
+  return 0; /* não tem */
 }

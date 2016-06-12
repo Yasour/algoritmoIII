@@ -36,10 +36,10 @@ int inserePalavra(nodo* N, char* palavra);
 
 nodo *get(nodo *N, char *palavra);
 
-int procura(nodo *N, char *palavra);
-
 nodo *encheTrie();
 
 int levenshtein(char *s, int ls, char *t, int lt);
+
+int procura(nodo *N, char *palavra, int dist);
 
 #endif

@@ -13,7 +13,7 @@ int main (int argc, char *argv[] ) {
           levenshtein(s1, strlen(s1), s2, strlen(s2)));*/
   char *pal;
 
-  int i;
+  int i= 1;
   nodo *no;
   no = encheTrie ();
   pal = malloc (30*(sizeof(char)));
@@ -23,7 +23,7 @@ int main (int argc, char *argv[] ) {
   pal[3] = 'i';
   pal[4] = 'r';
   pal[5] = 10;
-  i = procura (no,  pal);
+  procura (no,  pal, i);
 
 
 
