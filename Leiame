@@ -1,0 +1,13 @@
+Aluno : Ricardo Yasuo Hirano
+
+Trabalho Árvore Trie
+Disciplina do Professor Marcos Didonet Del Fabro
+
+- o programa compila normalmente como pede o enunciado;
+- ele adiciona na árvore palavras com até 14 letras;
+- make funciona corretamente
+- para rodar:
+	./dicionario entrada.txt saida.txt
+
+- a seguinte função que adaptei no código, retirei da internet:
+	int levenshtein(char *s1, char *s2)  

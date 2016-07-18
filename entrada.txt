@@ -1,5 +1,6 @@
-adriatico 2
-alberta 3
-aberta 2
-boiada 2
-boiada 3
+vida 3
+manha 2
+sol 3
+casa 2
+cachorro 3
+levanta 2

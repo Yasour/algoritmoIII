@@ -3,43 +3,52 @@
 
 #define INDICE_CHAR(c) ((int)c - (int)'a')
 
-void *mallocc (size_t nbytes);/* Função que avisa caso malloc devolva NULL */
+#define MIN3(a, b, c) ((a) < (b) ? ((a) < (c) ? (a) : (c)) : ((b) < (c) ? (b) : (c)))
 
-typedef struct trie nodo;  /* Cria struct nodo */
+/* Função que avisa caso malloc devolva NULL */
+void *mallocc (size_t nbytes);
 
-typedef struct base raiz;   /* Raíz trie */
+/* Cria struct nodo */
+typedef struct trie nodo;
 
-struct trie {         /* NODO */
-  nodo *letra [27];            /* Vetor int para caracteres */
+/* Raíz trie */
+typedef struct base raiz;
+
+ /* NODO */
+struct trie {
+  /* Vetor int para caracteres */
+  nodo *letra [27];
   int filhos;
-  nodo *pai;
   char *palavra;
 };
 
-struct base {        /* RAÍZ */
-  nodo *primeiro ;                    /* Pointer struct trie */
+/* RAÍZ */
+struct base {
+  /* Pointer struct trie */
+  nodo *primeiro ;
 };
 
 FILE* abreDicio ();
 
-char* maiuscMinusc(char* palavra);  /* Troca Maiúsculas -> Minúsculas */
+/* Troca Maiúsculas -> Minúsculas */
+char* maiuscMinusc(char* palavra);
 
-int conferePalavra(char* palavra);  /* retorna 0 se errado, 1 se certo */
+/* retorna 0 se errado, 1 se certo */
+int conferePalavra(char* palavra);
 
-char *copiaFile(FILE *entrada, char* palavra);
+nodo* criaNo(nodo *p);
 
-nodo* criaNo();
-
-raiz* criaTrie();            /* Cria Raíz da Trie */
-
+/* Cria Raíz da Trie */
+raiz* criaTrie();
+/* Recebe vetor com palavra conferida */
 int inserePalavra(nodo* N, char* palavra);
-
-nodo *get(nodo *N, char *palavra);
 
 nodo *encheTrie();
 
-int levenshtein(char *s, int ls, char *t, int lt);
+int levenshtein(char *s1, char *s2);
 
-int procura(nodo *N, char *palavra, int dist);
+int confereLeven(nodo *no, char *pal, int leven);
+
+int procura(FILE *saida, nodo *n, char *pal, int leven, int cont);
 
 #endif
